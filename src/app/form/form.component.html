@@ -1,0 +1,32 @@
+<form action="">
+
+  <div class="mb-3">
+    <label for="name" class="form-label">Имя:</label>
+    <input id="name" class="form-control" type="text" required name="name"
+           [(ngModel)]="user.name">
+  </div>
+
+  <div class="mb-3">
+    <label for="age" class="form-label">Возраст:</label>
+    <input id="age" class="form-control" type="number" required name="age"
+           [(ngModel)]="user.age">
+  </div>
+
+  <div class="mb-3">
+    <label for="role" class="form-label">Роли:</label>
+    <select  id="role" class="form-select" name="role"
+             [(ngModel)]="user.role">
+      <option [value]="role" *ngFor="let role of roles">
+        {{role}}
+      </option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <button class="btn btn-info">Сохранить</button>
+  </div>
+
+</form>
+
+<h3>{{user | json}}</h3>
+
