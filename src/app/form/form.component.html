@@ -2,19 +2,25 @@
 
   <div class="mb-3">
     <label for="name" class="form-label">Имя:</label>
-    <input id="name" class="form-control" type="text" required name="name"
+    <input #name="ngModel" id="name" class="form-control" type="text" required name="name"
            [(ngModel)]="user.name">
+    <div *ngIf="name.invalid && name.dirty" class="alert alert-danger">
+      Имя обязательно!
+    </div>
   </div>
 
   <div class="mb-3">
     <label for="age" class="form-label">Возраст:</label>
-    <input id="age" class="form-control" type="number" required name="age"
+    <input #age="ngModel" id="age" class="form-control" type="number" required name="age"
            [(ngModel)]="user.age">
+    <div *ngIf="age.invalid && age.dirty" class="alert alert-danger">
+      Возраст обязателен!
+    </div>
   </div>
 
   <div class="mb-3">
     <label for="role" class="form-label">Роли:</label>
-    <select  id="role" class="form-select" name="role"
+    <select  id="role" class="form-select" name="role" required
              [(ngModel)]="user.role">
       <option [value]="role" *ngFor="let role of roles">
         {{role}}
