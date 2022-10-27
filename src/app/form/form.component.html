@@ -1,21 +1,26 @@
-<form action="">
+<form #userForm="ngForm" (ngSubmit)="onSubmit()">
 
   <div class="mb-3">
     <label for="name" class="form-label">Имя:</label>
-    <input #name="ngModel" id="name" class="form-control" type="text" required name="name"
-           [(ngModel)]="user.name">
-    <div *ngIf="name.invalid && name.dirty" class="alert alert-danger">
-      Имя обязательно!
+    <input id="name"
+           class="form-control"
+           type="text"
+           required
+           name="name"
+           [(ngModel)]="user.name"
+           maxlength="10"
+           minlength="4">
+
+    <div *ngIf="formErrors" class="alert alert-danger">
+      {{formErrors.name}}
     </div>
   </div>
 
   <div class="mb-3">
     <label for="age" class="form-label">Возраст:</label>
-    <input #age="ngModel" id="age" class="form-control" type="number" required name="age"
+    <input id="age" class="form-control" type="number" required name="age"
            [(ngModel)]="user.age">
-    <div *ngIf="age.invalid && age.dirty" class="alert alert-danger">
-      Возраст обязателен!
-    </div>
+    <div *ngIf="formErrors.age" class="alert alert-danger">{{formErrors.age}}</div>
   </div>
 
   <div class="mb-3">
@@ -29,7 +34,9 @@
   </div>
 
   <div class="mb-3">
-    <button class="btn btn-info">Сохранить</button>
+    <button class="btn btn-info"
+            [disabled]="userForm.form.invalid"
+            type="submit">Сохранить</button>
   </div>
 
 </form>
