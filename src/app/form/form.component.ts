@@ -7,6 +7,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { emailValidator, rangeValidator } from '../custom-validators';
 import { User } from '../user';
 
 @Component({
@@ -40,11 +41,13 @@ export class FormComponent implements OnInit {
     },
     email: {
       required: 'Email обязателен!',
-      email: 'Неправильный формат email адреса.',
+      emailValidator: 'Неправильный формат email адреса.',
     },
     age: {
       required: 'Возраст обязателен!',
-      pattern: 'Значение должно быть целым числом.',
+      rangeValidator: 'Значение должно быть целым числом в диапазоне 1-122.',
+      minRange: 'Значение должно быть больше 1.',
+      maxRange: 'Значение должно быть меньше 122.',
     },
     role: {
       required: 'Роль обязательна!',
@@ -64,24 +67,10 @@ export class FormComponent implements OnInit {
 
   private initializeForm(): void {
     this.userForm = this.fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(15),
-        ],
-      ],
-      password: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(7),
-          Validators.maxLength(25),
-        ],
-      ],
-      email: ['', [Validators.required, Validators.email]],
-      age: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(15)]],
+      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
+      email: ['', [Validators.required, emailValidator]],
+      age: ['', [Validators.required, rangeValidator(1, 122)]],
       role: ['', [Validators.required]],
     });
 
@@ -98,9 +87,8 @@ export class FormComponent implements OnInit {
       if (control && control.dirty && control.invalid) {
         const messages = this.validationMessages[field];
 
-        Object.keys(control.errors as ValidationErrors).forEach((key) => {
-          console.log(messages[key]);
-          this.formErrors[field] = messages[key] + ' ';
+        Object.keys(control.errors as ValidationErrors).every(key => {
+          this.formErrors[field] = messages[key];
         });
       }
     });
