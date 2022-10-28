@@ -15,86 +15,96 @@ import { User } from '../user';
   styleUrls: ['./form.component.scss'],
 })
 export class FormComponent implements OnInit {
-  // userForm = new FormGroup({
-  //   name: new FormControl('', Validators.required),
-  //   password: new FormControl('', [Validators.required, Validators.minLength(7)]),
-  // }); то же самое с fb
+  userForm!: FormGroup;
 
-  userForm = this.fb.group({
-    name: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(7)]]
-  });
+  roles: string[] = ['Гость', 'Пользователь', 'Модератор', 'Администратор'];
+
+  formErrors: any = {
+    name: '',
+    password: '',
+    email: '',
+    age: '',
+    role: '',
+  };
+
+  validationMessages: any = {
+    name: {
+      required: 'Имя обязательно!',
+      minlength: 'Имя должно содержать не менее 4 символов.',
+      maxlength: 'Имя должно содержать не более 15 символов.',
+    },
+    password: {
+      required: 'Пароль обязателен!',
+      minlength: 'Пароль должен содержать не менее 7 символов.',
+      maxlength: 'Пароль должен содержать не более 25 символов.',
+    },
+    email: {
+      required: 'Email обязателен!',
+      email: 'Неправильный формат email адреса.',
+    },
+    age: {
+      required: 'Возраст обязателен!',
+      pattern: 'Значение должно быть целым числом.',
+    },
+    role: {
+      required: 'Роль обязательна!',
+    },
+  };
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initializeForm();
+  }
 
   onSubmit(): void {
     console.log(this.userForm.valid);
     console.log(this.userForm.value);
   }
+
+  private initializeForm(): void {
+    this.userForm = this.fb.group({
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(15),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(25),
+        ],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      age: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      role: ['', [Validators.required]],
+    });
+
+    this.userForm.valueChanges?.subscribe(() => this.onValueChanges());
+  }
+
+  private onValueChanges(): void {
+    const form = this.userForm;
+
+    Object.keys(this.formErrors).forEach((field) => {
+      const control = form.get(field);
+      this.formErrors[field] = '';
+
+      if (control && control.dirty && control.invalid) {
+        const messages = this.validationMessages[field];
+
+        Object.keys(control.errors as ValidationErrors).forEach((key) => {
+          console.log(messages[key]);
+          this.formErrors[field] = messages[key] + ' ';
+        });
+      }
+    });
+  }
 }
 
-// import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-// import { NgForm, ValidationErrors } from '@angular/forms';
-// import { User } from '../user';
-
-// @Component({
-//   selector: 'app-form',
-//   templateUrl: './form.component.html',
-//   styleUrls: ['./form.component.scss'],
-// })
-// export class FormComponent implements OnInit, AfterViewInit {
-//   roles: string[] = ['Гость', 'Пользователь', 'Модератор', 'Администратор'];
-
-//   user: User = new User(1, null, null, null);
-
-//   formErrors: any = {
-//     name: '',
-//     age: '',
-//   };
-
-//   validationMessages: any = {
-//     name: {
-//       required: 'Имя обязательно!',
-//       minlength: 'Имя должно содержать минимум 4 символа.',
-//     },
-//     age: {
-//       required: 'Возраст обязателен!',
-//     },
-//   };
-
-//   @ViewChild('userForm') userForm!: NgForm;
-
-//   constructor() {}
-
-//   ngOnInit(): void {
-//     console.log(this.userForm);
-//   }
-
-//   ngAfterViewInit(): void {
-//     this.userForm.valueChanges?.subscribe(() => this.onValueChanges());
-//   }
-
-//   onSubmit(): void {
-//     console.log('Form submitted');
-//   }
-
-//   private onValueChanges(): void {
-//     const form = this.userForm.form;
-
-//     Object.keys(this.formErrors).forEach((field) => {
-//       const control = form.get(field);
-//       this.formErrors[field] = '';
-
-//       if (control && control.dirty && control.invalid) {
-//         const messages = this.validationMessages[field];
-
-//         Object.keys(control.errors as ValidationErrors).forEach((key) => {
-//           console.log(messages[key]);
-//           this.formErrors[field] = messages[key] + ' ';
-//         });
-//       }
-//     });
-//   }
-// }
+// user: User = new User(1, null, null, null, null, null);
