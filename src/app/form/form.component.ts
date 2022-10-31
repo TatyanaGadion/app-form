@@ -1,89 +1,30 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
-  NgForm,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { emailValidator, rangeValidator } from '../custom-validators';
-import { User } from '../user';
-
+import { FORM_ERRORS, FORM_LABELS, FORM_PLACEHOLDERS, FORM_ROLES, FORM_SUCCESS, FORM_VALIDATION_MESSAGES } from '../form-data';
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
 })
 export class FormComponent implements OnInit {
+
+  formLabels = FORM_LABELS;
+  formPlaceholder = FORM_PLACEHOLDERS;
+  formSuccess = FORM_SUCCESS;
+  roles: string[] = FORM_ROLES;
+  validationMessages: any = FORM_VALIDATION_MESSAGES;
+  formErrors: any = FORM_ERRORS;
+
   userForm!: FormGroup;
 
-  roles: string[] = ['Гость', 'Пользователь', 'Модератор', 'Администратор'];
-
-  formErrors: any = {
-    name: '',
-    password: '',
-    email: '',
-    age: '',
-    role: '',
-  };
-
-  validationMessages: any = {
-    name: {
-      required: 'Имя обязательно!',
-      minlength: 'Имя должно содержать не менее 4 символов.',
-      maxlength: 'Имя должно содержать не более 15 символов.',
-    },
-    password: {
-      required: 'Пароль обязателен!',
-      minlength: 'Пароль должен содержать не менее 7 символов.',
-      maxlength: 'Пароль должен содержать не более 25 символов.',
-    },
-    email: {
-      required: 'Email обязателен!',
-      emailValidator: 'Неправильный формат email адреса.',
-    },
-    age: {
-      required: 'Возраст обязателен!',
-      rangeValidator: 'Значение должно быть целым числом в диапазоне 1-122.',
-      minRange: 'Значение должно быть больше 1.',
-      maxRange: 'Значение должно быть меньше 122.',
-    },
-    role: {
-      required: 'Роль обязательна!',
-    },
-  };
-
-  formLabels = {
-    name: 'Логин',
-    password: 'Пароль',
-    email: 'Email',
-    age: 'Возраст',
-    role: 'Роль'
-  };
-
-  formPlaceholder = {
-    name: 'Логин...',
-    password: 'Пароль...',
-    email: 'Email...',
-    age: 'Возраст...',
-    role: 'Выберите роль из списка...'
-  };
-
-  formSuccess = {
-    name: 'Принято!',
-    password: 'Принято!',
-    email: 'Принято!',
-    age: 'Принято!',
-    role: 'Принято!'
-  };
-
   constructor(private fb: FormBuilder) {}
-
-  // get form(): {[key: string]: AbstractControl} {
-  //   return this.userForm.controls;
-  // }
 
   get name(): AbstractControl { return this.userForm.controls['name']; }
   get password(): AbstractControl { return this.userForm.controls['password']; }
@@ -95,10 +36,7 @@ export class FormComponent implements OnInit {
     this.initializeForm();
   }
 
-  onSubmit(): void {
-    console.log(this.userForm.valid);
-    console.log(this.userForm.value);
-  }
+  onSubmit(): void { }
 
   private initializeForm(): void {
     this.userForm = this.fb.group({
@@ -130,4 +68,3 @@ export class FormComponent implements OnInit {
   }
 }
 
-// user: User = new User(1, null, null, null, null, null);
