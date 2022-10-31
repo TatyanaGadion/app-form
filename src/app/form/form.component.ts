@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -54,7 +55,41 @@ export class FormComponent implements OnInit {
     },
   };
 
+  formLabels = {
+    name: 'Логин',
+    password: 'Пароль',
+    email: 'Email',
+    age: 'Возраст',
+    role: 'Роль'
+  };
+
+  formPlaceholder = {
+    name: 'Логин...',
+    password: 'Пароль...',
+    email: 'Email...',
+    age: 'Возраст...',
+    role: 'Выберите роль из списка...'
+  };
+
+  formSuccess = {
+    name: 'Принято!',
+    password: 'Принято!',
+    email: 'Принято!',
+    age: 'Принято!',
+    role: 'Принято!'
+  };
+
   constructor(private fb: FormBuilder) {}
+
+  // get form(): {[key: string]: AbstractControl} {
+  //   return this.userForm.controls;
+  // }
+
+  get name(): AbstractControl { return this.userForm.controls['name']; }
+  get password(): AbstractControl { return this.userForm.controls['password']; }
+  get email(): AbstractControl { return this.userForm.controls['email']; }
+  get age(): AbstractControl { return this.userForm.controls['age']; }
+  get role(): AbstractControl { return this.userForm.controls['role']; }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -67,24 +102,24 @@ export class FormComponent implements OnInit {
 
   private initializeForm(): void {
     this.userForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(15)]],
-      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
-      email: ['', [Validators.required, emailValidator]],
-      age: ['', [Validators.required, rangeValidator(1, 122)]],
-      role: ['', [Validators.required]],
+      name: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(15)]],
+      password: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
+      email: [null, [Validators.required, emailValidator]],
+      age: [null, [Validators.required, rangeValidator(1, 122)]],
+      role: [null, [Validators.required]],
     });
 
     this.userForm.valueChanges?.subscribe(() => this.onValueChanges());
   }
 
-  private onValueChanges(): void {
+  onValueChanges(): void {
     const form = this.userForm;
 
     Object.keys(this.formErrors).forEach((field) => {
       const control = form.get(field);
       this.formErrors[field] = '';
 
-      if (control && control.dirty && control.invalid) {
+      if (control?.invalid && (control.dirty || control.touched)) {
         const messages = this.validationMessages[field];
 
         Object.keys(control.errors as ValidationErrors).every(key => {
