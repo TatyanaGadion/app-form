@@ -6,7 +6,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { emailValidator, rangeValidator } from '../custom-validators';
+import { asyncUrlValidator, emailValidator, rangeValidator } from '../custom-validators';
 import { FORM_ERRORS, FORM_LABELS, FORM_PLACEHOLDERS, FORM_ROLES, FORM_SUCCESS, FORM_VALIDATION_MESSAGES } from '../form-data';
 @Component({
   selector: 'app-form',
@@ -21,7 +21,6 @@ export class FormComponent implements OnInit {
   roles: string[] = FORM_ROLES;
   validationMessages: any = FORM_VALIDATION_MESSAGES;
   formErrors: any = FORM_ERRORS;
-
   userForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
@@ -30,6 +29,7 @@ export class FormComponent implements OnInit {
   get password(): AbstractControl { return this.userForm.controls['password']; }
   get email(): AbstractControl { return this.userForm.controls['email']; }
   get age(): AbstractControl { return this.userForm.controls['age']; }
+  get site(): AbstractControl { return this.userForm.controls['site']; }
   get role(): AbstractControl { return this.userForm.controls['role']; }
 
   ngOnInit(): void {
@@ -44,7 +44,8 @@ export class FormComponent implements OnInit {
       password: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
       email: [null, [Validators.required, emailValidator]],
       age: [null, [Validators.required, rangeValidator(1, 122)]],
-      role: [null, [Validators.required]],
+      site: [null, [Validators.required], [asyncUrlValidator]],
+      role: [null, [Validators.required]]
     });
 
     this.userForm.valueChanges?.subscribe(() => this.onValueChanges());

@@ -45,6 +45,23 @@
   </div>
 
   <div class="mb-3">
+    <label for="site" class="form-label">{{formLabels.site}}<span class="text-danger">*</span></label>
+    <input (blur)="onValueChanges()"
+          [class]="{'is-valid': site.valid,
+                    'is-invalid': site.invalid && (site.touched || site.dirty)}" id="site" class="form-control"
+                    type="text" formControlName="site" [placeholder]="formPlaceholder.site">
+    <div *ngIf="site.pending" class="text-muted">
+      {{validationMessages.site.pending}}
+      <img class="loading" src="../../assets/loading.gif" alt="">
+    </div>
+    <div *ngIf="site.valid" class="valid-feedback">{{formSuccess.site}}</div>
+    <div *ngIf="site.invalid && (site.touched || site.dirty)" class="invalid-feedback">
+      <div *ngIf="formErrors.site">{{formErrors.site}}</div>
+      <div *ngIf="!formErrors.site && site.errors?.['urlNotAllowed']">{{validationMessages.site.urlNotAllowed}}</div>
+    </div>
+  </div>
+
+  <div class="mb-3">
     <label for="role" class="form-label">{{formLabels.role}}<span class="text-danger">*</span></label>
     <select (blur)="onValueChanges()"
             [class]="{'is-valid': role.valid,
