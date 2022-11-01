@@ -6,7 +6,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { asyncUrlValidator, emailValidator, rangeValidator } from '../custom-validators';
+import { asyncUrlValidator, emailValidator, observablecUrlValidator, rangeValidator } from '../custom-validators';
 import { FORM_ERRORS, FORM_LABELS, FORM_PLACEHOLDERS, FORM_ROLES, FORM_SUCCESS, FORM_VALIDATION_MESSAGES } from '../form-data';
 @Component({
   selector: 'app-form',
@@ -44,7 +44,7 @@ export class FormComponent implements OnInit {
       password: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(25)]],
       email: [null, [Validators.required, emailValidator]],
       age: [null, [Validators.required, rangeValidator(1, 122)]],
-      site: [null, [Validators.required], [asyncUrlValidator]],
+      site: [null, [Validators.required], [observablecUrlValidator]],
       role: [null, [Validators.required]]
     });
 
